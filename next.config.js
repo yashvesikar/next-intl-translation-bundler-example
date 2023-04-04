@@ -1,20 +1,20 @@
 const TranslationsPlugin = require("./TranslationsPlugin");
+const i18nConfig = require("./i18n.config");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // webpack: (config, { dev, isServer }) => {
-  //   config.plugins.push(new TranslationsPlugin({}));
-  //   return config;
-  // },
-  i18n: {
-    // These are all the locales you want to support in
-    // your application
-    locales: ["en-US", "fr"],
-    // This is the default locale you want to be used when visiting
-    // a non-locale prefixed path e.g. `/hello`
-    defaultLocale: "en-US",
+
+  webpack: (
+    /** @type {import('next/dist/server/config-shared').NextJsWebpackConfig} */
+    config,
+    { dev, isServer }
+  ) => {
+    config.plugins.push(new TranslationsPlugin({}));
+    // config.mode = "development";
+    return config;
   },
+  i18n: i18nConfig.i18n,
 };
 
 module.exports = nextConfig;
