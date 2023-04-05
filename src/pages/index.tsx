@@ -2,10 +2,12 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
 import Link from "next/link";
-import { Example } from "@/components/example";
+import { useState } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [language, setLanguage] = useState<"en-US" | "fr">("en-US");
+
   return (
     <>
       <Head>
@@ -16,21 +18,33 @@ export default function Home() {
       </Head>
       <main className={styles.main}>
         <div className={styles.grid}>
-          <Link href="/A" className={styles.card}>
+          <Link href={`/${language}/A`} className={styles.card}>
             <h2 className={inter.className}>
               Page A <span>-&gt;</span>
             </h2>
             <p className={inter.className}>Translation bundle split page A</p>
           </Link>
 
-          <Link href="/B" className={styles.card}>
+          <Link href={`/${language}/B`} className={styles.card}>
             <h2 className={inter.className}>
               Page B <span>-&gt;</span>
             </h2>
             <p className={inter.className}>Translation bundle split page B</p>
           </Link>
-          <Example />
+
+          <Link href={`/${language}/123/C`} className={styles.card}>
+            <h2 className={inter.className}>
+              Page C <span>-&gt;</span>
+            </h2>
+            <p className={inter.className}>Translation bundle split page C</p>
+          </Link>
         </div>
+        <select
+          onChange={(e) => setLanguage(e.target.value as typeof language)}
+        >
+          <option value="en-US">English</option>
+          <option value="fr">French</option>
+        </select>
       </main>
     </>
   );

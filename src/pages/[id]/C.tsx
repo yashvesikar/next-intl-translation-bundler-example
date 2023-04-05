@@ -2,23 +2,25 @@ import { getTranslationBundleFromContext } from "@/translation-utils";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { useTranslations } from "next-intl";
 
-function B(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
+function C(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { messages } = props;
   const t = useTranslations();
 
   return (
     <ul>
-      <li>{t("title") + ": " + t("pageB")}</li>
+      <li>{t("title") + ": " + t("pageC")}</li>
       <li>bundle: {JSON.stringify(messages)}</li>
     </ul>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  // todo make it work for dynamic pages
   const translationBundle = await getTranslationBundleFromContext(
     __filename,
     context
   );
+
   return {
     props: {
       // You can get the messages from anywhere you like. The recommended
@@ -27,4 +29,5 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     },
   };
 };
-export default B;
+
+export default C;

@@ -1,12 +1,10 @@
-import {
-  getTranslationBundleFromContext,
-  useTranslationsCustom,
-} from "@/translation-utils";
+import { getTranslationBundleFromContext } from "@/translation-utils";
 import type { GetServerSideProps, InferGetServerSidePropsType } from "next";
+import { useTranslations } from "next-intl";
 
 function A(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { messages } = props;
-  const t = useTranslationsCustom();
+  const t = useTranslations();
 
   return (
     <ul>
@@ -17,7 +15,11 @@ function A(props: InferGetServerSidePropsType<typeof getServerSideProps>) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const translationBundle = await getTranslationBundleFromContext(context);
+  const translationBundle = await getTranslationBundleFromContext(
+    __filename,
+    context
+  );
+
   return {
     props: {
       // You can get the messages from anywhere you like. The recommended

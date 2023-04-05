@@ -1,5 +1,6 @@
 {
   "title": "Exemple de fractionnement de traduction",
-  "pageA": "Page A",
-  "pageB": "Page B"
+  "pageA": "Page A - french",
+  "pageB": "Page B - french",
+  "pageC": "Page C - french"
 }
