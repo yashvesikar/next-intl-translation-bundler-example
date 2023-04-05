@@ -1,17 +1,17 @@
 import { GetStaticPropsContext } from "next";
-import { useTranslations } from "next-intl";
 
 export async function getTranslationBundleFromContext(
+  filename: string,
   context: GetStaticPropsContext<
     import("querystring").ParsedUrlQuery,
     import("next").PreviewData
   >
 ): Promise<Record<string, string>> {
-  console.log("DEBUG: cwd", process.cwd());
-  console.log("context.locale", context.locale);
-  return (await import(`src/messages/${context.locale}.json`)).default;
-}
+  const translationFilePath = filename
+    .replace(/.*pages\/(.*)(\/.*)?.js/, ".next/i18n/pages/$1/{locale}.json")
+    .replace("{locale}", context.locale ?? "en-US");
+  const fs = (await import("fs")).default;
 
-export function useTranslationsCustom() {
-  return useTranslations();
+  const data = JSON.parse(fs.readFileSync(translationFilePath).toString());
+  return Promise.resolve(data);
 }

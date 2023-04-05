@@ -10,8 +10,9 @@ const nextConfig = {
     config,
     { dev, isServer }
   ) => {
-    config.plugins.push(new TranslationsPlugin({}));
-    // config.mode = "development";
+    config.plugins.push(new TranslationsPlugin());
+    config.resolve.fallback = { fs: false };
+    dev ? (config.mode = "development") : null;
     return config;
   },
   i18n: i18nConfig.i18n,
