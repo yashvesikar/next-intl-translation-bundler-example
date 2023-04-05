@@ -1,38 +1,38 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## What is this?
 
-## Getting Started
+This is a somewhat rudimentary/hacky example of how to do per entrypoint translation bundling/tree-shaking using [next-intl](https://next-intl-docs.vercel.app/).
+
+The core logic of the example is in the `TranslationsPlugin.js` file.
+
+## Running
 
 First, run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+npm run build
+npm run start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. To see the language changing happening use the select dropdown at the bottom of the page to change the language before clicking a link. The supported languages are "en-US" and "fr"
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## How it works
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+We use the webpack JavascriptParser hooks to find `evaluateExpression` calls to `useTranslations` such as:
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+```js
+const t = useTranslations();
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+and tag the variable declarator `t` so we can parse out the keys from later uses of `t` like:
 
-## Learn More
+```js
+t("someKey");
+```
 
-To learn more about Next.js, take a look at the following resources:
+For every module we track the module `identifier` and the translation keys used in that module in a `translationsMap`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Then for entrypoint (in a NextJS app that is every page) we identify all keys used in that entrypoint by iterating over it's modules, and emit a bundle for every language in the `.next/i18n` directory in a structure that mimics the page structure of the application.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Lastly at runtime in the `getServerSideProps` method of a page we identify which bundle to serve based on request path and request locale.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Author: Yash Vesikar
